@@ -64,6 +64,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/testcontainers/testcontainers-go => github.com/coffeegoddd/testcontainers-go v0.0.0-20240130233435-7925c5daf279
+replace github.com/testcontainers/testcontainers-go => github.com/coffeegoddd/testcontainers-go v0.0.0-20240131200220-cb8e58efe570
 
-replace github.com/testcontainers/testcontainers-go/modules/dolt => github.com/coffeegoddd/testcontainers-go/modules/dolt v0.0.0-20240130233435-7925c5daf279
+replace github.com/testcontainers/testcontainers-go/modules/dolt => github.com/coffeegoddd/testcontainers-go/modules/dolt v0.0.0-20240131200220-cb8e58efe570
