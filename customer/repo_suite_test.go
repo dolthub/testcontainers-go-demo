@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/dolthub/testcontainers-go-demo/testhelpers"
@@ -39,9 +40,23 @@ func (suite *CustomerRepoTestSuite) TearDownSuite() {
 	}
 }
 
+func (suite *CustomerRepoTestSuite) createBranchName(suiteName, testName string) string {
+	return fmt.Sprintf("%s_%s", suiteName, testName)
+}
+
 func (suite *CustomerRepoTestSuite) AfterTest(suiteName, testName string) {
 	if suite.db != nil {
-		suite.db.Close()
+		branchName := suite.createBranchName(suiteName, testName)
+		_, err := suite.db.ExecContext(suite.ctx, "CALL DOLT_COMMIT('-Am', ?)", fmt.Sprintf("Finished testing on %s", branchName))
+		if err != nil {
+			if !strings.Contains(err.Error(), "nothing to commit") {
+				log.Fatal(err)
+			}
+		}
+		err = suite.db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
 		suite.db = nil
 		suite.repository = nil
 	}
@@ -54,7 +69,7 @@ func (suite *CustomerRepoTestSuite) BeforeTest(suiteName, testName string) {
 		log.Fatal(err)
 	}
 
-	newBranch := fmt.Sprintf("%s_%s", suiteName, testName)
+	newBranch := suite.createBranchName(suiteName, testName)
 
 	// checkout new branch for test from the designated starting point
 	_, err = db.ExecContext(suite.ctx, "CALL DOLT_CHECKOUT(?, '-b', ?);", suite.startRef, newBranch)

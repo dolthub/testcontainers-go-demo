@@ -2,11 +2,10 @@ package customer
 
 import (
 	"context"
-	"log"
-	"testing"
-
 	"github.com/dolthub/testcontainers-go-demo/testhelpers"
 	"github.com/stretchr/testify/suite"
+	"log"
+	"testing"
 )
 
 type RemoteRepoTestSuite struct {
